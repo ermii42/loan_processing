@@ -1,15 +1,12 @@
 package com.loan.loan_processing.controller;
 
 import com.loan.loan_processing.dto.TariffDTO;
-import com.loan.loan_processing.model.Tariff;
 import com.loan.loan_processing.model.response.DataResponse;
 import com.loan.loan_processing.service.TariffService;
-import com.loan.loan_processing.service.impl.TariffServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
