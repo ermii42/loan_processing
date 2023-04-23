@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: changeset/tariff.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changeset/loan_order.yaml
+      relativeToChangelogFile: true
