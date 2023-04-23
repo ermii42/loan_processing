@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -18,10 +19,10 @@ public class TariffRepositoryImpl implements TariffRepository {
     private static final String SAVE_REQUEST = "INSERT INTO tariff(type, interest_rate) VALUES (?, ?)";
 
     @Override
-    public List<Tariff> getAllTariffs() {
-        return jdbcTemplate.query(
+    public Optional<List<Tariff>> getAllTariffs() {
+        return Optional.of(jdbcTemplate.query(
                 FIND_ALL_REQUEST,
-                new BeanPropertyRowMapper<>(Tariff.class));
+                new BeanPropertyRowMapper<>(Tariff.class)));
     }
 
     @Override

@@ -2,12 +2,13 @@ package com.loan.loan_processing.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class LoanOrder {
     private long id;
     private String order_id;
