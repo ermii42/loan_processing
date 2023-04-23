@@ -2,13 +2,13 @@ package com.loan.loan_processing.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@Table(name = "tariff")
+@NoArgsConstructor
 public class Tariff {
     private long id;
     private String type;
-    private String interest_rate;
+    private String interestRate;
 }

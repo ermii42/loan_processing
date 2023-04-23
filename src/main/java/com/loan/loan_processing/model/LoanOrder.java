@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
-@Table(name = "loan_order")
 public class LoanOrder {
     private long id;
     private String order_id;

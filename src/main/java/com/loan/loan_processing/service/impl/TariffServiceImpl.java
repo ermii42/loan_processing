@@ -1,5 +1,6 @@
 package com.loan.loan_processing.service.impl;
 
+import com.loan.loan_processing.dto.TariffDTO;
 import com.loan.loan_processing.model.Tariff;
 import com.loan.loan_processing.repository.TariffRepository;
 import com.loan.loan_processing.service.TariffService;
@@ -18,5 +19,10 @@ public class TariffServiceImpl implements TariffService {
     @Override
     public List<Tariff> getAllTariffs() {
         return tariffRepository.getAllTariffs();
+    }
+
+    @Override
+    public void saveTariff(TariffDTO tariffDTO) {
+        tariffRepository.saveTariff(tariffDTO);
     }
 }

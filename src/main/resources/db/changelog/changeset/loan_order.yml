@@ -12,11 +12,11 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
-                    primaryKeyName: loan_order_pk
+                    primaryKeyName: loan_order_primary_key
                     nullable: false
               - column:
                   name: order_id
-                  type: varchar(50)
+                  type: varchar(255)
                   constraints:
                     unique: true
                     nullable: false
@@ -30,7 +30,7 @@ databaseChangeLog:
                   type: long
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_loan_order
+                    foreignKeyName: tariff_foreign_key
                     references: tariff(id)
               - column:
                   name: credit_rating
@@ -39,7 +39,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: status
-                  type: varchar(50)
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
