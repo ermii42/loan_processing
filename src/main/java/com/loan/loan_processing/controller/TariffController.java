@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/loan-service")
-public class LoanProcessingController {
+public class TariffController {
     private final TariffService tariffService;
     @GetMapping("/getTariffs")
     public ResponseEntity<DataResponse> getTariffs(){

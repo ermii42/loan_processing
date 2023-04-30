@@ -17,6 +17,7 @@ public class TariffRepositoryImpl implements TariffRepository {
     private final JdbcTemplate jdbcTemplate;
     private static final String FIND_ALL_REQUEST = "SELECT * FROM tariff";
     private static final String SAVE_REQUEST = "INSERT INTO tariff(type, interest_rate) VALUES (?, ?)";
+    private static final String FIND_TARIFF_BY_ID_REQUEST = "SELECT * FROM tariff WHERE id=?";
 
     @Override
     public Optional<List<Tariff>> getAllTariffs() {
@@ -32,4 +33,14 @@ public class TariffRepositoryImpl implements TariffRepository {
                 tariffDTO.getType(),
                 tariffDTO.getInterest_rate());
     }
+
+    @Override
+    public Boolean isTariffIDExists(long tariff_id) {
+        List<Tariff> res = jdbcTemplate.query(
+                FIND_TARIFF_BY_ID_REQUEST,
+                new BeanPropertyRowMapper<>(Tariff.class),
+                tariff_id);
+        return res.size() != 0;
+    }
+
 }

@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface TariffRepository {
     Optional<List<Tariff>> getAllTariffs();
     void saveTariff(TariffDTO tariffDTO);
+    Boolean isTariffIDExists(long tariff_id);
 }
