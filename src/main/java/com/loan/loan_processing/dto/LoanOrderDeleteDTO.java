@@ -3,10 +3,9 @@ package com.loan.loan_processing.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-
 @Data
 @AllArgsConstructor
-public class LoanOrderDTO {
+public class LoanOrderDeleteDTO {
     private long userId;
-    private long tariffId;
+    private String orderId;
 }

@@ -1,5 +1,6 @@
 package com.loan.loan_processing.repository;
 
+import com.loan.loan_processing.dto.LoanOrderDeleteDTO;
 import com.loan.loan_processing.dto.LoanOrderSaveDTO;
 import com.loan.loan_processing.model.LoanOrder;
 
@@ -12,4 +13,8 @@ public interface LoanOrderRepository {
     Boolean isOrderIDExists(String order_id);
     LoanOrder getOrderByOrderId(String order_id);
     Optional<List<LoanOrder>> getAllOrders();
+
+    Boolean isUserIdAndOrderIdExists(LoanOrderDeleteDTO loanOrderDeleteDTO);
+    Boolean isPossibleToDelete(LoanOrderDeleteDTO loanOrderDeleteDTO);
+    void deleteOrder(LoanOrderDeleteDTO loanOrderDeleteDTO);
 }

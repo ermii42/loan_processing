@@ -11,11 +11,11 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class LoanOrder {
     private long id;
-    private String order_id;
-    private long user_id;
-    private long tariff_id;
-    private double credit_rating;
+    private String orderId;
+    private long userId;
+    private long tariffId;
+    private double creditRating;
     private String status;
-    private Timestamp time_insert;
-    private Timestamp time_update;
+    private Timestamp timeInsert;
+    private Timestamp timeUpdate;
 }

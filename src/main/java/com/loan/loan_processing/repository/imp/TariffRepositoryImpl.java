@@ -31,15 +31,15 @@ public class TariffRepositoryImpl implements TariffRepository {
         jdbcTemplate.update(
                 SAVE_REQUEST,
                 tariffDTO.getType(),
-                tariffDTO.getInterest_rate());
+                tariffDTO.getInterestRate());
     }
 
     @Override
-    public Boolean isTariffIDExists(long tariff_id) {
+    public Boolean isTariffIDExists(long tariffId) {
         List<Tariff> res = jdbcTemplate.query(
                 FIND_TARIFF_BY_ID_REQUEST,
                 new BeanPropertyRowMapper<>(Tariff.class),
-                tariff_id);
+                tariffId);
         return res.size() != 0;
     }
 

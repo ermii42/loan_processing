@@ -1,6 +1,7 @@
 package com.loan.loan_processing.service.impl;
 
 import com.loan.loan_processing.dto.LoanOrderDTO;
+import com.loan.loan_processing.dto.LoanOrderDeleteDTO;
 import com.loan.loan_processing.dto.LoanOrderSaveDTO;
 import com.loan.loan_processing.exception.LoanException;
 import com.loan.loan_processing.model.LoanOrder;
@@ -26,17 +27,17 @@ public class LoanOrderServiceImpl implements LoanOrderService {
 
     @Override
     public String applicationSubmission(LoanOrderDTO loanOrderDTO) {
-        if (!tariffRepository.isTariffIDExists(loanOrderDTO.getTariff_id())) {
+        if (!tariffRepository.isTariffIDExists(loanOrderDTO.getTariffId())) {
             throw new LoanException("TARIFF_NOT_FOUND", "Тариф не найден");
         }
-        for (LoanOrder loanOrder : loanOrderRepository.getLoanOrderByUserId(loanOrderDTO.getUser_id())) {
-            if (loanOrder.getTariff_id() == loanOrderDTO.getTariff_id()) {
+        for (LoanOrder loanOrder : loanOrderRepository.getLoanOrderByUserId(loanOrderDTO.getUserId())) {
+            if (loanOrder.getTariffId() == loanOrderDTO.getTariffId()) {
                 switch (loanOrder.getStatus()) {
                     case "IN_PROGRESS" -> throw new LoanException("LOAN_CONSIDERATION", "Заявка уже существует");
                     case "APPROVED" -> throw new LoanException("LOAN_ALREADY_APPROVED", "Заявка уже подтверждена");
                     case "REFUSED" -> {
                         long now = new Timestamp(System.currentTimeMillis()).getTime();
-                        if (now / 1000 / 60 - loanOrder.getTime_update().getTime() / 1000 / 60 < 2) {
+                        if (now / 1000 / 60 - loanOrder.getTimeUpdate().getTime() / 1000 / 60 < 2) {
                             throw new LoanException("TRY_LATER", "Попробуйте позже");
                         }
                     }
@@ -49,7 +50,7 @@ public class LoanOrderServiceImpl implements LoanOrderService {
         Timestamp time_insert_and_update = new Timestamp(System.currentTimeMillis());
         LoanOrderSaveDTO loanOrderSaveDTO =
                 new LoanOrderSaveDTO(order_id,
-                        loanOrderDTO.getUser_id(), loanOrderDTO.getTariff_id(),
+                        loanOrderDTO.getUserId(), loanOrderDTO.getTariffId(),
                         credit_rating, status,
                         time_insert_and_update,
                         time_insert_and_update);
@@ -58,16 +59,27 @@ public class LoanOrderServiceImpl implements LoanOrderService {
     }
 
     @Override
-    public String getOrderStatus(String order_id) {
-        if (!loanOrderRepository.isOrderIDExists(order_id)) {
+    public String getOrderStatus(String orderId) {
+        if (!loanOrderRepository.isOrderIDExists(orderId)) {
             throw new LoanException("ORDER_NOT_FOUND", "Заявка не найдена");
         }
-        return loanOrderRepository.getOrderByOrderId(order_id).getStatus();
+        return loanOrderRepository.getOrderByOrderId(orderId).getStatus();
     }
 
     @Override
     public DataResponse getAllOrders() {
         return new DataResponse(
                 new OrderResponse(loanOrderRepository.getAllOrders().orElseThrow()));
+    }
+
+    @Override
+    public void deleteOrder(LoanOrderDeleteDTO loanOrderDeleteDTO) {
+        if(!loanOrderRepository.isUserIdAndOrderIdExists(loanOrderDeleteDTO)){
+            throw new LoanException("ORDER_NOT_FOUND", "Заявка не найдена");
+        }
+        if(!loanOrderRepository.isPossibleToDelete(loanOrderDeleteDTO)){
+            throw new LoanException("ORDER_IMPOSSIBLE_TO_DELETE", "Невозможно удалить заявку");
+        }
+        loanOrderRepository.deleteOrder(loanOrderDeleteDTO);
     }
 }

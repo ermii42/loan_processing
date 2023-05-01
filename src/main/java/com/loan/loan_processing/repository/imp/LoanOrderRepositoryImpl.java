@@ -1,5 +1,6 @@
 package com.loan.loan_processing.repository.imp;
 
+import com.loan.loan_processing.dto.LoanOrderDeleteDTO;
 import com.loan.loan_processing.dto.LoanOrderSaveDTO;
 import com.loan.loan_processing.model.LoanOrder;
 import com.loan.loan_processing.repository.LoanOrderRepository;
@@ -17,46 +18,54 @@ public class LoanOrderRepositoryImpl implements LoanOrderRepository {
     private final JdbcTemplate jdbcTemplate;
     private static final String FIND_BY_USER_ID_REQUEST = "SELECT * FROM loan_order WHERE user_id=?";
     private static final String SAVE_REQUEST =
-            "INSERT INTO loan_order(order_id, user_id, tariff_id, credit_rating, status, time_insert, time_update) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO loan_order(order_id, user_id, tariff_id, credit_rating, status, time_insert, time_update) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String FIND_ORDER_BY_ORDER_ID_REQUEST = "SELECT * FROM loan_order WHERE order_id=?";
     private static final String FIND_ALL_REQUEST = "SELECT * FROM loan_order";
 
+    private static final String FIND_ORDER_BY_USER_ID_AND_ORDER_ID_REQUEST =
+            "SELECT * FROM loan_order WHERE user_id=? AND order_id=?";
+
+    private static final String FIND_ORDER_BY_USER_ID_AND_ORDER_ID_WHERE_IN_PROGRESS_REQUEST =
+            "SELECT * FROM loan_order WHERE user_id=? AND order_id=? AND status='IN_PROGRESS'";
+    private static final String DELETE_ORDER_REQUEST = "DELETE FROM loan_order WHERE user_id=? AND order_id=?";
+
     @Override
-    public List<LoanOrder> getLoanOrderByUserId(long user_id) {
+    public List<LoanOrder> getLoanOrderByUserId(long userId) {
         return jdbcTemplate.query(
                 FIND_BY_USER_ID_REQUEST,
                 new BeanPropertyRowMapper<>(LoanOrder.class),
-                user_id);
+                userId);
     }
 
     @Override
     public void saveLoanOrder(LoanOrderSaveDTO loanOrderSaveDTO) {
         jdbcTemplate.update(
                 SAVE_REQUEST,
-                loanOrderSaveDTO.getOrder_id(),
-                loanOrderSaveDTO.getUser_id(),
-                loanOrderSaveDTO.getTariff_id(),
-                loanOrderSaveDTO.getCredit_rating(),
+                loanOrderSaveDTO.getOrderId(),
+                loanOrderSaveDTO.getUserId(),
+                loanOrderSaveDTO.getTariffId(),
+                loanOrderSaveDTO.getCreditRating(),
                 loanOrderSaveDTO.getStatus(),
-                loanOrderSaveDTO.getTime_insert(),
-                loanOrderSaveDTO.getTime_update());
+                loanOrderSaveDTO.getTimeInsert(),
+                loanOrderSaveDTO.getTimeUpdate());
     }
 
     @Override
-    public Boolean isOrderIDExists(String order_id) {
+    public Boolean isOrderIDExists(String orderId) {
         List<LoanOrder> res = jdbcTemplate.query(
                 FIND_ORDER_BY_ORDER_ID_REQUEST,
                 new BeanPropertyRowMapper<>(LoanOrder.class),
-                order_id);
+                orderId);
         return res.size() != 0;
     }
 
     @Override
-    public LoanOrder getOrderByOrderId(String order_id) {
+    public LoanOrder getOrderByOrderId(String orderId) {
         List<LoanOrder> res = jdbcTemplate.query(
                 FIND_ORDER_BY_ORDER_ID_REQUEST,
                 new BeanPropertyRowMapper<>(LoanOrder.class),
-                order_id);
+                orderId);
         return res.get(0);
     }
 
@@ -66,4 +75,33 @@ public class LoanOrderRepositoryImpl implements LoanOrderRepository {
                 FIND_ALL_REQUEST,
                 new BeanPropertyRowMapper<>(LoanOrder.class)));
     }
+
+    @Override
+    public Boolean isUserIdAndOrderIdExists(LoanOrderDeleteDTO loanOrderDeleteDTO) {
+        List<LoanOrder> res = jdbcTemplate.query(
+                FIND_ORDER_BY_USER_ID_AND_ORDER_ID_REQUEST,
+                new BeanPropertyRowMapper<>(LoanOrder.class),
+                loanOrderDeleteDTO.getUserId(),
+                loanOrderDeleteDTO.getOrderId());
+        return res.size() != 0;
+    }
+
+    @Override
+    public Boolean isPossibleToDelete(LoanOrderDeleteDTO loanOrderDeleteDTO) {
+        List<LoanOrder> res = jdbcTemplate.query(
+                FIND_ORDER_BY_USER_ID_AND_ORDER_ID_WHERE_IN_PROGRESS_REQUEST,
+                new BeanPropertyRowMapper<>(LoanOrder.class),
+                loanOrderDeleteDTO.getUserId(),
+                loanOrderDeleteDTO.getOrderId());
+        return res.size() != 0;
+    }
+
+    @Override
+    public void deleteOrder(LoanOrderDeleteDTO loanOrderDeleteDTO) {
+        jdbcTemplate.update(
+                DELETE_ORDER_REQUEST,
+                loanOrderDeleteDTO.getUserId(),
+                loanOrderDeleteDTO.getOrderId());
+    }
+
 }

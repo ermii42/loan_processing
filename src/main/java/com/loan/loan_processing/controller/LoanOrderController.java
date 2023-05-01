@@ -1,6 +1,7 @@
 package com.loan.loan_processing.controller;
 
 import com.loan.loan_processing.dto.LoanOrderDTO;
+import com.loan.loan_processing.dto.LoanOrderDeleteDTO;
 import com.loan.loan_processing.model.response.DataResponse;
 import com.loan.loan_processing.model.response.LoanOrderResponse;
 import com.loan.loan_processing.model.response.OrderStatusResponse;
@@ -32,5 +33,10 @@ public class LoanOrderController {
     public ResponseEntity<DataResponse> getOrders(){
         DataResponse orders = loanOrderService.getAllOrders();
         return ResponseEntity.ok(orders);
+    }
+
+    @PostMapping("/deleteOrder")
+    public void deleteOrder(@RequestBody LoanOrderDeleteDTO loanOrderDeleteDTO){
+        loanOrderService.deleteOrder(loanOrderDeleteDTO);
     }
 }
