@@ -4,6 +4,8 @@ import com.loan.loan_processing.dto.LoanOrderDTO;
 import com.loan.loan_processing.dto.LoanOrderSaveDTO;
 import com.loan.loan_processing.exception.LoanException;
 import com.loan.loan_processing.model.LoanOrder;
+import com.loan.loan_processing.model.response.DataResponse;
+import com.loan.loan_processing.model.response.OrderResponse;
 import com.loan.loan_processing.repository.LoanOrderRepository;
 import com.loan.loan_processing.repository.TariffRepository;
 import com.loan.loan_processing.service.LoanOrderService;
@@ -53,5 +55,19 @@ public class LoanOrderServiceImpl implements LoanOrderService {
                         time_insert_and_update);
         loanOrderRepository.saveLoanOrder(loanOrderSaveDTO);
         return order_id;
+    }
+
+    @Override
+    public String getOrderStatus(String order_id) {
+        if (!loanOrderRepository.isOrderIDExists(order_id)) {
+            throw new LoanException("ORDER_NOT_FOUND", "Заявка не найдена");
+        }
+        return loanOrderRepository.getOrderByOrderId(order_id).getStatus();
+    }
+
+    @Override
+    public DataResponse getAllOrders() {
+        return new DataResponse(
+                new OrderResponse(loanOrderRepository.getAllOrders().orElseThrow()));
     }
 }
