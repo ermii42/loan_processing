@@ -4,6 +4,7 @@ import com.loan.loan_processing.dto.LoanOrderDeleteDTO;
 import com.loan.loan_processing.dto.LoanOrderSaveDTO;
 import com.loan.loan_processing.model.LoanOrder;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,4 +18,6 @@ public interface LoanOrderRepository {
     Boolean isUserIdAndOrderIdExists(LoanOrderDeleteDTO loanOrderDeleteDTO);
     Boolean isPossibleToDelete(LoanOrderDeleteDTO loanOrderDeleteDTO);
     void deleteOrder(LoanOrderDeleteDTO loanOrderDeleteDTO);
+    Optional<List<LoanOrder>> getInProgressOrders();
+    void updateOrder(String status, Timestamp time_update, long id);
 }

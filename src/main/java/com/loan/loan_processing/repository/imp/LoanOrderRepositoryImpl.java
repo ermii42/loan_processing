@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,8 @@ public class LoanOrderRepositoryImpl implements LoanOrderRepository {
     private static final String FIND_ORDER_BY_USER_ID_AND_ORDER_ID_WHERE_IN_PROGRESS_REQUEST =
             "SELECT * FROM loan_order WHERE user_id=? AND order_id=? AND status='IN_PROGRESS'";
     private static final String DELETE_ORDER_REQUEST = "DELETE FROM loan_order WHERE user_id=? AND order_id=?";
+    private static final String FIND_IN_PROGRESS_REQUEST = "SELECT * FROM loan_order WHERE status='IN_PROGRESS'";
+    private static final String UPDATE_TIME_REQUEST = "UPDATE loan_order SET status=?, time_update=? WHERE id=?";
 
     @Override
     public List<LoanOrder> getLoanOrderByUserId(long userId) {
@@ -102,6 +105,23 @@ public class LoanOrderRepositoryImpl implements LoanOrderRepository {
                 DELETE_ORDER_REQUEST,
                 loanOrderDeleteDTO.getUserId(),
                 loanOrderDeleteDTO.getOrderId());
+    }
+
+    @Override
+    public Optional<List<LoanOrder>> getInProgressOrders() {
+        return Optional.of(jdbcTemplate.query(
+                FIND_IN_PROGRESS_REQUEST,
+                new BeanPropertyRowMapper<>(LoanOrder.class)));
+    }
+
+    @Override
+    public void updateOrder(String status, Timestamp time_update, long id) {
+        jdbcTemplate.update(
+                UPDATE_TIME_REQUEST,
+                status,
+                time_update,
+                id
+        );
     }
 
 }
