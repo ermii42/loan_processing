@@ -21,14 +21,14 @@ public class LoanOrderRepositoryImpl implements LoanOrderRepository {
     private static final String SAVE_REQUEST =
             "INSERT INTO loan_order(order_id, user_id, tariff_id, credit_rating, status, time_insert, time_update) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private static final String FIND_ORDER_BY_ORDER_ID_REQUEST = "SELECT * FROM loan_order WHERE order_id=?";
+    private static final String FIND_ORDER_BY_ORDER_ID_REQUEST = "SELECT EXISTS (SELECT * FROM loan_order WHERE order_id=?)";
     private static final String FIND_ALL_REQUEST = "SELECT * FROM loan_order";
 
     private static final String FIND_ORDER_BY_USER_ID_AND_ORDER_ID_REQUEST =
-            "SELECT * FROM loan_order WHERE user_id=? AND order_id=?";
+            "SELECT EXISTS (SELECT * FROM loan_order WHERE user_id=? AND order_id=?)";
 
     private static final String FIND_ORDER_BY_USER_ID_AND_ORDER_ID_WHERE_IN_PROGRESS_REQUEST =
-            "SELECT * FROM loan_order WHERE user_id=? AND order_id=? AND status='IN_PROGRESS'";
+            "SELECT EXISTS (SELECT * FROM loan_order WHERE user_id=? AND order_id=? AND status='IN_PROGRESS')";
     private static final String DELETE_ORDER_REQUEST = "DELETE FROM loan_order WHERE user_id=? AND order_id=?";
     private static final String FIND_IN_PROGRESS_REQUEST = "SELECT * FROM loan_order WHERE status='IN_PROGRESS'";
     private static final String UPDATE_TIME_REQUEST = "UPDATE loan_order SET status=?, time_update=? WHERE id=?";
@@ -56,11 +56,10 @@ public class LoanOrderRepositoryImpl implements LoanOrderRepository {
 
     @Override
     public Boolean isOrderIDExists(String orderId) {
-        List<LoanOrder> res = jdbcTemplate.query(
+        return jdbcTemplate.queryForObject(
                 FIND_ORDER_BY_ORDER_ID_REQUEST,
-                new BeanPropertyRowMapper<>(LoanOrder.class),
+                Boolean.class,
                 orderId);
-        return res.size() != 0;
     }
 
     @Override
@@ -81,22 +80,20 @@ public class LoanOrderRepositoryImpl implements LoanOrderRepository {
 
     @Override
     public Boolean isUserIdAndOrderIdExists(LoanOrderDeleteDTO loanOrderDeleteDTO) {
-        List<LoanOrder> res = jdbcTemplate.query(
+        return jdbcTemplate.queryForObject(
                 FIND_ORDER_BY_USER_ID_AND_ORDER_ID_REQUEST,
-                new BeanPropertyRowMapper<>(LoanOrder.class),
+                Boolean.class,
                 loanOrderDeleteDTO.getUserId(),
                 loanOrderDeleteDTO.getOrderId());
-        return res.size() != 0;
     }
 
     @Override
     public Boolean isPossibleToDelete(LoanOrderDeleteDTO loanOrderDeleteDTO) {
-        List<LoanOrder> res = jdbcTemplate.query(
+        return jdbcTemplate.queryForObject(
                 FIND_ORDER_BY_USER_ID_AND_ORDER_ID_WHERE_IN_PROGRESS_REQUEST,
-                new BeanPropertyRowMapper<>(LoanOrder.class),
+                Boolean.class,
                 loanOrderDeleteDTO.getUserId(),
                 loanOrderDeleteDTO.getOrderId());
-        return res.size() != 0;
     }
 
     @Override

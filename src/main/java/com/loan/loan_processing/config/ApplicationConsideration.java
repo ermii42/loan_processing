@@ -17,7 +17,7 @@ import java.util.List;
 public class ApplicationConsideration {
     private final LoanOrderRepository loanOrderRepository;
 
-    @Scheduled(fixedDelay = 1000 * 60 * 2)
+    @Scheduled(fixedDelay = 1000 * 60 * 2, initialDelay = 1000)
     public void scheduleFixedDelayTask(){
         List<LoanOrder> orders = loanOrderRepository.getInProgressOrders().orElseThrow();
         for(LoanOrder order: orders){
