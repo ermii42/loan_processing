@@ -1,16 +1,13 @@
-package com.loan.loan_processing.model;
+package com.loan.loan_processing.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class LoanOrder {
-    private long id;
+public class LoanOrderSaveDTO {
     private String orderId;
     private long userId;
     private long tariffId;
