@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: changeset/tariff.yml
+      relativeToChangelogFile: true
+  - include:
+      file: changeset/loan_order.yml
+      relativeToChangelogFile: true
