@@ -13,6 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>loan_processing</name>
 	<description>loan_processing</description>
+	<packaging>jar</packaging>
 	<properties>
 		<java.version>20</java.version>
 	</properties>
