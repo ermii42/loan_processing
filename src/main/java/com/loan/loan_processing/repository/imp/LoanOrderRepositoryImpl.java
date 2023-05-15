@@ -22,6 +22,8 @@ public class LoanOrderRepositoryImpl implements LoanOrderRepository {
             "INSERT INTO loan_order(order_id, user_id, tariff_id, credit_rating, status, time_insert, time_update) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String FIND_ORDER_BY_ORDER_ID_REQUEST = "SELECT EXISTS (SELECT * FROM loan_order WHERE order_id=?)";
+
+    private static final String FIND_ORDER = "SELECT * from loan_order where order_id = ?";
     private static final String FIND_ALL_REQUEST = "SELECT * FROM loan_order";
 
     private static final String FIND_ORDER_BY_USER_ID_AND_ORDER_ID_REQUEST =
@@ -65,7 +67,7 @@ public class LoanOrderRepositoryImpl implements LoanOrderRepository {
     @Override
     public LoanOrder getOrderByOrderId(String orderId) {
         List<LoanOrder> res = jdbcTemplate.query(
-                FIND_ORDER_BY_ORDER_ID_REQUEST,
+                FIND_ORDER,
                 new BeanPropertyRowMapper<>(LoanOrder.class),
                 orderId);
         return res.get(0);
